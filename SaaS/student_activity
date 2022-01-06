@@ -1,0 +1,15 @@
+--Detailed student activity in a certain course
+
+SELECT
+CDM_LMS.COURSE_ITEM.name,
+tool_source_id,
+duration_sum,
+interaction_cnt,
+first_accessed_time,
+last_accessed_time
+FROM cdm_lms.ACTIVITY LEFT JOIN CDM_LMS.COURSE_ITEM ON cdm_lms.activity.course_item_id  = CDM_LMS.COURSE_ITEM.id
+                           JOIN cdm_lms.course on cdm_lms.course.id = cdm_lms.activity.course_id
+WHERE cdm_lms.course.course_number='[insert course_id]'
+AND PERSON_SOURCE_ID='[insert person_id]'
+AND LEN(LTRIM(RTRIM(tool_source_id))) > 0
+order by first_accessed_time desc;
