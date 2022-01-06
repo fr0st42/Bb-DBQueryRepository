@@ -1,0 +1,18 @@
+--report last system access date for users
+select      
+    p.first_name,
+    p.last_name,
+    p.stage:user_id::string as username,
+    to_date(max(sa.last_accessed_time)) as last_accessed,
+    p.institution_role_source_code as primary_role,
+    to_date(p.created_time) as created_date
+from 
+    cdm_lms.person p
+    left join cdm_lms.session_activity sa on p.id=sa.person_id
+where 
+    p.row_deleted_time is NULL
+    and p.enabled_ind ='TRUE'
+    --and last_accessed_time is not NULL -- uncomment to exclude those who have never logged in
+group by 
+    p.first_name,p.last_name,p.stage,p.created_time,p.institution_role_source_code
+order by last_accessed asc
